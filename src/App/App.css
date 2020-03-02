@@ -48,6 +48,13 @@ body {
   margin: 30px;
 }
 
+  
+ol, ul {
+  padding-left: 0px;
+  list-style-type: none;
+}
+
+
 .status {
   margin-bottom: 10px;
 }
