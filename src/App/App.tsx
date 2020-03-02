@@ -16,6 +16,7 @@ export interface AppState {
   winner: SquareState;
   winnerLine?: Array<number>;
   xIsNext: boolean;
+  isAscending: boolean;
 }
 
 class App extends React.Component<{}, AppState> {
@@ -37,6 +38,7 @@ class App extends React.Component<{}, AppState> {
       winner: null,
       winnerLine: undefined,
       xIsNext: true,
+      isAscending: true,
     };
 
     if (isUndefined(this.state)) {
@@ -67,6 +69,12 @@ class App extends React.Component<{}, AppState> {
       winnerLine,
       xIsNext: !this.state.xIsNext,
     })
+  }
+
+  handleSortToggle() {
+    this.setState({
+      isAscending: !this.state.isAscending
+    });
   }
 
   jumpTo(step: number) {
@@ -109,6 +117,11 @@ class App extends React.Component<{}, AppState> {
       )
     });
 
+    const isAscending = this.state.isAscending;
+    if (!isAscending) {
+      moves.reverse();
+    }
+
     return (
       <div className="App">
 
@@ -125,6 +138,9 @@ class App extends React.Component<{}, AppState> {
         />
         <div className="game-info">
           <div className="text-center">{status}</div>
+          <button onClick={()=> this.handleSortToggle()}>
+            {isAscending ? 'Set to descending order' : 'Set to ascending order'}
+          </button>
           <div><ol>{moves}</ol></div>
         </div>
       </div>
