@@ -109,7 +109,7 @@ class App extends React.Component<{}, AppState> {
         />
         <div className="game-info">
           <div className="text-center">{status}</div>
-          <ol>{moves}</ol>
+          <div><ol>{moves}</ol></div>
         </div>
       </div>
     )
