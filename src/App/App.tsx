@@ -64,10 +64,12 @@ class App extends React.Component<{}, AppState> {
   }
 
   jumpTo(step: number) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0 ? false : true,
-    })
+    if (!this.state.winner) {
+      this.setState({
+        stepNumber: step,
+        xIsNext: (step % 2) === 0 ? false : true,
+      })
+    }
   }
 
   getStatusText() {
@@ -84,11 +86,17 @@ class App extends React.Component<{}, AppState> {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const status = this.getStatusText();
-    const moves = history.map( (step, move) => {
+    const moves = history.map((step, move) => {
       const desc = move ? `Go to move #${move}` : 'Go to game start';
+      const bold = move === this.state.stepNumber ? 'bold' : '';
+
+      console.log("current move: " + move)
+      console.log("current step: " + step)
+      console.log("current desc: " + desc)
+
       return (
-        <li key = {move}>
-          <button onClick= {() => this.jumpTo(move)}>{desc}</button>
+        <li key={move}>
+          <button onClick={() => this.jumpTo(move)} className={bold}>{desc}</button>
         </li>
       )
     });
