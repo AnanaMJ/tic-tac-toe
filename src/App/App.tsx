@@ -5,7 +5,10 @@ import Board, { SquareState } from '../Board/Board';
 import { isUndefined, isNullOrUndefined } from 'util';
 import { calculateWinner, getWinnerLine } from '../Functions/Functions';
 
-type BoardState = Array<SquareState>;
+export interface BoardState {
+  boardState: Array<SquareState>,
+  latestMove: number,
+}
 
 export interface AppState {
   history: Array<BoardState>;
@@ -22,9 +25,11 @@ class App extends React.Component<{}, AppState> {
   }
 
   reset = () => {
-    const history = [
-      Array(9).fill(null)
-    ];
+    const history = [{
+      boardState: Array(9).fill(null),
+      latestMove: 0
+    }];
+
 
     const state = {
       history,
@@ -44,7 +49,8 @@ class App extends React.Component<{}, AppState> {
   handleBoardClick = (i: number) => {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
-    const boardState = current.slice() as BoardState;
+    const boardState = current.boardState.slice() as Array<SquareState>;
+    // const latestMove = current.latestMove;
 
     if (!isNullOrUndefined(boardState[i]) || this.state.winner) {
       return;
@@ -55,7 +61,7 @@ class App extends React.Component<{}, AppState> {
     const winnerLine = getWinnerLine(boardState);
 
     this.setState({
-      history: history.concat([boardState]),
+      history: history.concat([{boardState:boardState, latestMove: i}]),
       stepNumber: history.length,
       winner,
       winnerLine,
@@ -82,17 +88,19 @@ class App extends React.Component<{}, AppState> {
     return `Current turn: ${this.state.xIsNext ? 'X' : 'O'}`;
   }
 
+  getPosition(i: number) {
+    const positions = [[0,0], [0,1], [0,2], [1,0], [1,1], [1,2], [2,0], [2,1], [2,2]];
+    return positions[i];
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const status = this.getStatusText();
     const moves = history.map((step, move) => {
-      const desc = move ? `Go to move #${move}` : 'Go to game start';
+      const position = this.getPosition(step.latestMove);
+      const desc = move ? `Go to move #${move} (${position[0]}, ${position[1]})` : 'Go to game start';
       const bold = move === this.state.stepNumber ? 'bold' : '';
-
-      console.log("current move: " + move)
-      console.log("current step: " + step)
-      console.log("current desc: " + desc)
 
       return (
         <li key={move}>
@@ -106,7 +114,7 @@ class App extends React.Component<{}, AppState> {
 
         <div className="Board">
           <Board
-            squares={current}
+            squares={current.boardState}
             winnerLine={this.state.winnerLine}
             onClick={this.handleBoardClick}
           />
