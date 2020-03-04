@@ -9,4 +9,4 @@ Things to add:
 - :white_check_mark: When someone wins, highlight the three squares that caused the win.
 - :white_check_mark: When no one wins, display a message about the result being a draw.
 - :white_check_mark: Turn it into a TypeScript project.
-- :black_square_button: Use hooks.
+- :white_check_mark: Use hooks.
